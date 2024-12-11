@@ -8,13 +8,9 @@ import (
 
 var input []string = strings.Split("3 386358 86195 85 1267 3752457 0 741", " ")
 
-var (
-	cache       map[string][]string
-	blinksCache map[int]map[string]int64
-)
+var blinksCache map[int]map[string]int64
 
 func main() {
-	cache = map[string][]string{}
 	blinksCache = map[int]map[string]int64{}
 	fmt.Println("Total stones count is:", part1())
 }
@@ -27,31 +23,26 @@ func mutate(data string, blinks int) int64 {
 			return cachedBlinksStone
 		}
 	}
-	if cached, ok := cache[data]; ok {
-		stones = cached
-	} else {
-		if data == "0" {
-			stones = append(stones, "1")
-		} else if len(data)%2 == 0 {
-			left, right := data[:len(data)/2], data[len(data)/2:]
-			val, err := strconv.ParseInt(left, 10, 0)
-			if err != nil {
-				panic(err)
-			}
-			stones = append(stones, fmt.Sprint(val))
-			val, err = strconv.ParseInt(right, 10, 0)
-			if err != nil {
-				panic(err)
-			}
-			stones = append(stones, fmt.Sprint(val))
-		} else {
-			val, err := strconv.ParseInt(data, 10, 0)
-			if err != nil {
-				panic(err)
-			}
-			stones = append(stones, fmt.Sprint(val*2024))
+	if data == "0" {
+		stones = append(stones, "1")
+	} else if len(data)%2 == 0 {
+		left, right := data[:len(data)/2], data[len(data)/2:]
+		val, err := strconv.ParseInt(left, 10, 0)
+		if err != nil {
+			panic(err)
 		}
-		cache[data] = stones
+		stones = append(stones, fmt.Sprint(val))
+		val, err = strconv.ParseInt(right, 10, 0)
+		if err != nil {
+			panic(err)
+		}
+		stones = append(stones, fmt.Sprint(val))
+	} else {
+		val, err := strconv.ParseInt(data, 10, 0)
+		if err != nil {
+			panic(err)
+		}
+		stones = append(stones, fmt.Sprint(val*2024))
 	}
 	if blinks > 1 {
 
