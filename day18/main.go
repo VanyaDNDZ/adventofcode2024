@@ -41,8 +41,18 @@ var fieldSize = 71
 
 func main() {
 	data := read()
-	fmt.Println(findMinPath(data.field[:2873], pos{0, 0}, pos{fieldSize - 1, fieldSize - 1}))
-	fmt.Println(findCutOff(data.field, pos{0, 0}, pos{fieldSize - 1, fieldSize - 1}))
+	start := pos{0, 0}
+	end := pos{fieldSize - 1, fieldSize - 1}
+	fmt.Println(findMinPath(data.field[:2873], start, end))
+	fmt.Println(findCutOff(data.field, start, end))
+	index, ok := slices.BinarySearchFunc(data.field, math.MaxInt, func(a pos, b int) int {
+		index := slices.Index(data.field, a)
+		if findMinPath(data.field[:index], start, end) == b {
+			return 0
+		}
+		return -1
+	})
+	fmt.Println(index, ok, data.field[index-1])
 }
 
 func findCutOff(allBytes []pos, start, end pos) pos {
